@@ -1,0 +1,10 @@
+
+# Critical Workflow Rules
+
+1. **Server Management (MANDATORY)**:
+    - **Restart on Changes**: When creating new pages, layouts, or changing routing structure, ALWAYS restart the development server (`npm run dev`).
+    - **Verify Success**: When restarting the server, YOU MUST wait and verify the output confirms it is up and running (e.g., "Ready in ...", "Local: http://localhost:3000") BEFORE responding to the user.
+    - **Explicit Confirmation**: After successful verification, you must explicitly state: "Server has been restarted and is up and running." Never assume it started; check the process status first.
+
+2. **Route Verification**:
+    - After creating a new route and restarting, verify the route is accessible to prevent 404 errors.

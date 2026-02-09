@@ -1,26 +1,89 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-background: #050507;
+  --color-foreground: #ffffff;
+  --color-primary: #FF8A00;
+  --color-obsidian: #050507;
+  --color-obsidian-light: #0a0a0c;
+
+  --radius-lg: 0.8rem;
+  --radius-xl: 1.2rem;
+  --radius-2xl: 1.5rem;
+
+  --font-display: "Inter", sans-serif;
+
+  --breakpoint-xs: 480px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+@layer base {
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-display);
+    -webkit-font-smoothing: antialiased;
+  }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Improve mobile touch targets */
+  button,
+  a {
+    -webkit-tap-highlight-color: rgba(255, 138, 0, 0.1);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .obsidian-gradient {
+    background: radial-gradient(circle at 50% 0%, rgba(255, 138, 0, 0.05) 0%, transparent 50%),
+      #050507;
+  }
+
+  .glass-panel {
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  .glass-card {
+    background: rgba(15, 15, 18, 0.6);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.3s ease;
+  }
+
+  .glass-card:hover {
+    border-color: rgba(255, 138, 0, 0.3);
+    background: rgba(255, 138, 0, 0.02);
+  }
+
+  .sidebar-active {
+    background: linear-gradient(90deg, rgba(255, 138, 0, 0.15) 0%, transparent 100%);
+    color: #FF8A00;
+    border-right: 2px solid #FF8A00;
+  }
+
+  .text-glow-amber {
+    color: #FF8A00;
+    text-shadow: 0 0 12px rgba(255, 138, 0, 0.3);
+  }
+
+  .amber-button {
+    background: #FF8A00;
+    box-shadow: 0 4px 20px rgba(255, 138, 0, 0.25);
+    transition: all 0.3s ease;
+    color: var(--color-obsidian);
+    border: none;
+    min-height: 44px;
+  }
+
+  .amber-button:hover {
+    background: #FF9E2A;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 25px rgba(255, 138, 0, 0.4);
+  }
 }
