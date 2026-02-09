@@ -19,7 +19,7 @@ export default async function SitesPage() {
             <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8 relative z-10">
 
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-6 sm:mt-0">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-6 sm:mt-0 pr-12 sm:pr-0">
                     <div>
                         <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Мои сайты</h1>
                         <p className="text-xs sm:text-sm text-white/40">Управление ресурсами и настройками мониторинга.</p>

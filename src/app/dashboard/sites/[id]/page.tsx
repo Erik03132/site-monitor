@@ -74,7 +74,7 @@ export default async function SiteDetailsPage({ params }: { params: Promise<{ id
             <div className="max-w-6xl mx-auto space-y-6 sm:space-y-8 relative z-10">
 
                 {/* Header / Nav */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-6 sm:mt-0">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-6 sm:mt-0 pr-12 sm:pr-0">
                     <Link
                         href="/dashboard"
                         className="flex items-center gap-2 text-white/40 hover:text-primary transition-colors font-bold group text-xs sm:text-sm uppercase tracking-wider w-fit"

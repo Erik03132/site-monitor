@@ -79,7 +79,7 @@ export default async function DashboardPage() {
         <div className="min-h-screen flex flex-col">
             {/* Header */}
             <header className="sticky top-0 z-40 px-4 sm:px-8 py-4 sm:py-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-white/5 bg-obsidian/50 backdrop-blur-md">
-                <div className="pl-12 lg:pl-0">
+                <div className="pr-12 lg:pr-0">
                     <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">Рабочий стол</h1>
                     <p className="text-xs sm:text-sm text-white/40">Мониторинг ресурсов в реальном времени</p>
                 </div>

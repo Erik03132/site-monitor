@@ -25,7 +25,7 @@ export function Sidebar() {
             {/* Mobile Toggle */}
             <button
                 onClick={toggleSidebar}
-                className="lg:hidden fixed top-6 left-4 z-[60] size-10 bg-primary/10 border border-primary/20 rounded-xl flex items-center justify-center text-primary backdrop-blur-md"
+                className="lg:hidden fixed top-6 right-4 z-[60] size-10 bg-primary/10 border border-primary/20 rounded-xl flex items-center justify-center text-primary backdrop-blur-md"
             >
                 {isOpen ? <X className="size-6" /> : <Menu className="size-6" />}
             </button>
