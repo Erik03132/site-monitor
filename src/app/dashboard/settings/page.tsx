@@ -48,8 +48,8 @@ export default function SettingsPage() {
                             <User className="size-24" />
                         </div>
                         <div className="relative z-10">
-                            <div className="size-10 bg-white/5 rounded-xl flex items-center justify-center mb-4 sm:mb-6 border border-white/5 group-hover:bg-primary/10 group-hover:border-primary/20 transition-colors">
-                                <User className="size-5 text-white/60 group-hover:text-primary transition-colors" />
+                            <div className="size-10 bg-primary/10 rounded-full flex items-center justify-center mb-4 sm:mb-6 border border-primary/20 group-hover:bg-primary/20 transition-all">
+                                <User className="size-5 text-primary" />
                             </div>
                             <h3 className="text-white font-bold text-sm mb-1">Профиль</h3>
                             <p className="text-white/40 text-[10px] sm:text-xs leading-relaxed">Личные данные, пароль и email.</p>
@@ -62,8 +62,8 @@ export default function SettingsPage() {
                             <Monitor className="size-24" />
                         </div>
                         <div className="relative z-10">
-                            <div className="size-10 bg-white/5 rounded-xl flex items-center justify-center mb-4 sm:mb-6 border border-white/5 group-hover:bg-primary/10 group-hover:border-primary/20 transition-colors">
-                                <Monitor className="size-5 text-white/60 group-hover:text-primary transition-colors" />
+                            <div className="size-10 bg-primary/10 rounded-full flex items-center justify-center mb-4 sm:mb-6 border border-primary/20 group-hover:bg-primary/20 transition-all">
+                                <Monitor className="size-5 text-primary" />
                             </div>
                             <h3 className="text-white font-bold text-sm mb-1">Мониторинг</h3>
                             <p className="text-white/40 text-[10px] sm:text-xs leading-relaxed">Настройки сканирования и частоты.</p>
@@ -76,8 +76,8 @@ export default function SettingsPage() {
                             <Bell className="size-24" />
                         </div>
                         <div className="relative z-10">
-                            <div className="size-10 bg-white/5 rounded-xl flex items-center justify-center mb-4 sm:mb-6 border border-white/5 group-hover:bg-primary/10 group-hover:border-primary/20 transition-colors">
-                                <Bell className="size-5 text-white/60 group-hover:text-primary transition-colors" />
+                            <div className="size-10 bg-primary/10 rounded-full flex items-center justify-center mb-4 sm:mb-6 border border-primary/20 group-hover:bg-primary/20 transition-all">
+                                <Bell className="size-5 text-primary" />
                             </div>
                             <h3 className="text-white font-bold text-sm mb-1">Уведомления</h3>
                             <p className="text-white/40 text-[10px] sm:text-xs leading-relaxed">Email и Telegram оповещения.</p>
@@ -90,8 +90,8 @@ export default function SettingsPage() {
                             <Shield className="size-24" />
                         </div>
                         <div className="relative z-10">
-                            <div className="size-10 bg-white/5 rounded-xl flex items-center justify-center mb-4 sm:mb-6 border border-white/5 group-hover:bg-primary/10 group-hover:border-primary/20 transition-colors">
-                                <Shield className="size-5 text-white/60 group-hover:text-primary transition-colors" />
+                            <div className="size-10 bg-primary/10 rounded-full flex items-center justify-center mb-4 sm:mb-6 border border-primary/20 group-hover:bg-primary/20 transition-all">
+                                <Shield className="size-5 text-primary" />
                             </div>
                             <h3 className="text-white font-bold text-sm mb-1">Безопасность</h3>
                             <p className="text-white/40 text-[10px] sm:text-xs leading-relaxed">Двухфакторная аутентификация и сессии.</p>
@@ -101,8 +101,8 @@ export default function SettingsPage() {
                     {/* Log Out - Full Width on Mobile, Standard on Desktop */}
                     <div className="glass-card p-6 sm:p-8 rounded-[24px] hover:border-red-500/20 hover:bg-red-500/5 transition-all group cursor-pointer relative overflow-hidden sm:col-span-2 lg:col-span-1 border-white/5">
                         <div className="relative z-10 flex items-center gap-4 h-full">
-                            <div className="size-10 bg-white/5 rounded-xl flex items-center justify-center border border-white/5 group-hover:bg-red-500/10 group-hover:border-red-500/20 transition-colors shrink-0">
-                                <LogOut className="size-5 text-white/60 group-hover:text-red-500 transition-colors" />
+                            <div className="size-10 bg-red-500/10 rounded-full flex items-center justify-center border border-red-500/20 group-hover:bg-red-500/20 transition-all shrink-0">
+                                <LogOut className="size-5 text-red-500" />
                             </div>
                             <div>
                                 <h3 className="text-white group-hover:text-red-500 font-bold text-sm mb-1 transition-colors">Выйти из аккаунта</h3>
