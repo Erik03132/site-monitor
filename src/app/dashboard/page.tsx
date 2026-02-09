@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import { formatDate, cn } from '@/lib/utils';
 import { Plus, Globe, Zap, Clock, History, BarChart3, MoreVertical, Check, AlertTriangle, RefreshCw } from 'lucide-react';
+import { ScanButton } from '@/components/ScanButton';
 
 interface ChangeItem {
     id: string;
@@ -272,9 +273,7 @@ export default async function DashboardPage() {
                                             </td>
                                             <td className="px-6 sm:px-8 py-5 text-right">
                                                 <div className="flex justify-end gap-1 sm:gap-2">
-                                                    <button title="Scan now" className="size-8 flex items-center justify-center text-white/20 hover:text-primary transition-all bg-transparent hover:bg-primary/5 rounded-lg border-none group/btn">
-                                                        <RefreshCw className="size-4 group-active/btn:rotate-180 transition-transform duration-500" />
-                                                    </button>
+                                                    <ScanButton siteId={site.id} variant="icon" />
                                                     <Link href={`/dashboard/sites/${site.id}`} className="size-8 flex items-center justify-center text-white/20 hover:text-primary transition-all hover:bg-primary/5 rounded-lg">
                                                         <MoreVertical className="size-4" />
                                                     </Link>
