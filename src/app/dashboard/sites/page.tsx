@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
-import { Globe, Plus, MoreVertical, RefreshCw } from 'lucide-react';
+import { Globe, Plus, MoreVertical } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ScanButton } from '@/components/ScanButton';
 

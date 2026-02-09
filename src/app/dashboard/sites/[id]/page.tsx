@@ -60,9 +60,9 @@ export default async function SiteDetailsPage({ params }: { params: Promise<{ id
 
     const siteData = site as Site;
     // Cast changes to expected type, filtering out the nested page object implies we trust the query
-    const changesList = (changes || []).map((c: any) => ({
+    const changesList = (changes || []).map((c) => ({
         id: c.id,
-        change_type: c.change_type,
+        change_type: c.change_type as 'added' | 'removed' | 'modified',
         summary: c.summary,
         detected_at: c.detected_at,
     })) as Change[];

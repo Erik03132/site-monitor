@@ -236,7 +236,7 @@ async function parseHtmlContent(html: string) {
     const blocks: Array<{ type: string; text: string }> = []
     $('h1, h2, h3, h4, h5, h6').each((_, el) => {
         const text = $(el).text().trim()
-        if (text) blocks.push({ type: (el as any).tagName.toLowerCase(), text })
+        if (text) blocks.push({ type: (el as { tagName: string }).tagName.toLowerCase(), text })
     })
     $('p').each((_, el) => {
         const text = $(el).text().trim()
