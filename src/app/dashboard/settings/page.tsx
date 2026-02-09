@@ -1,4 +1,4 @@
-import { ArrowLeft, User, Shield, Bell, CreditCard, Monitor, LogOut } from 'lucide-react';
+import { ArrowLeft, User, Shield, Bell, Monitor, LogOut } from 'lucide-react';
 import Link from 'next/link';
 
 export default function SettingsPage() {

@@ -2,7 +2,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
-export async function GET(request: Request) {
+export async function GET(_request: Request) {
     try {
         const supabase = await createClient()
         const { data: { user }, error: userError } = await supabase.auth.getUser()
@@ -22,7 +22,7 @@ export async function GET(request: Request) {
         }
 
         return NextResponse.json({ keywords })
-    } catch (error) {
+    } catch (_error) {
         return NextResponse.json(
             { error: 'Internal server error' },
             { status: 500 }
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
         }
 
         return NextResponse.json({ keyword: data })
-    } catch (error) {
+    } catch (_error) {
         return NextResponse.json(
             { error: 'Internal server error' },
             { status: 500 }
