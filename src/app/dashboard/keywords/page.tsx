@@ -134,9 +134,10 @@ export default function KeywordsPage() {
         <div className="p-8 max-w-4xl mx-auto text-white">
             <div className="mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <div>
-                    <h1 className="text-3xl font-black tracking-tight">Ключевые слова</h1>
-                    <p className="text-gray-400 mt-1 font-medium">Получайте уведомления, когда эти слова появляются на сайтах</p>
+                    <h1 className="text-3xl font-black tracking-tight uppercase">Глобальный мониторинг</h1>
+                    <p className="text-gray-400 mt-1 font-bold">Отслеживайте упоминания ваших ключевых слов по всему интернету через Perplexity AI</p>
                 </div>
+
                 <button
                     onClick={handleScanAll}
                     disabled={isScanning}
@@ -256,16 +257,19 @@ export default function KeywordsPage() {
                 </div>
             )}
 
-            <div className="mt-12 p-6 bg-blue-600/5 rounded-3xl border border-blue-600/10">
-                <h4 className="text-sm font-black uppercase tracking-widest text-blue-400 mb-2 flex items-center gap-2">
+            <div className="mt-12 p-8 bg-blue-600/5 rounded-[32px] border border-blue-600/10 relative overflow-hidden">
+                <div className="absolute -right-10 -bottom-10 size-40 bg-blue-600/10 blur-3xl rounded-full"></div>
+                <h4 className="text-sm font-black uppercase tracking-widest text-blue-400 mb-4 flex items-center gap-2">
                     <Zap className="w-4 h-4 fill-blue-400" />
                     Как это работает?
                 </h4>
-                <p className="text-gray-400 text-sm leading-relaxed font-medium">
-                    При каждом сканировании сайта мы ищем ваши ключевые слова в новом тексте.
-                    Если совпадение будет найдено, вы получите мгновенное уведомление на почту с прямой ссылкой на сайт.
+                <p className="text-gray-400 text-sm leading-relaxed font-medium relative z-10">
+                    Мы используем мощь <strong className="text-white">Perplexity AI</strong>, чтобы сканировать глобальную сеть на наличие ваших ключевых слов.
+                    Система находит самые свежие новости за последние 24-48 часов, анализирует их и создает краткие выводы из 3-4 предложений.
+                    Все результаты мгновенно появляются в вашей общей ленте на рабочем столе.
                 </p>
             </div>
+
         </div>
     )
 }

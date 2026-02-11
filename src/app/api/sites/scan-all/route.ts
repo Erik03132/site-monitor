@@ -9,10 +9,11 @@ export async function POST(request: NextRequest) {
     const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser()
 
     // Fallback for demo/testing or if called from frontend with session
-    const supabase = user ? supabaseAdmin : (await import('@/lib/supabase/server')).createClient()
+    const supabase = user ? supabaseAdmin : await (await import('@/lib/supabase/server')).createClient()
 
     // Get user from session if not provided (for browser calls)
     const { data: { user: sessionUser } } = await (user ? { data: { user } } : (supabase as any).auth.getUser())
+
     const currentUser = user || sessionUser
 
     if (!currentUser) {
@@ -67,16 +68,37 @@ export async function POST(request: NextRequest) {
         }
     }
 
-    // 5. GLOBAL SEARCH (Option B)
+    // 5. GLOBAL SEARCH - Now independent of sites
     let globalMentions: any[] = []
     if (keywords && keywords.length > 0) {
-        const kwList = keywords.map(k => k.keyword)
+        const kwList = keywords.map((k: any) => k.keyword)
         console.log(`[Global Search] Starting for keywords: ${kwList.join(', ')}`)
         const searchResults = await searchGlobalKeywords(kwList)
 
-        // Save to DB (optional/placeholder for now)
-        globalMentions = searchResults
-        console.log(`[Global Search] Found ${searchResults.length} mentions online`)
+        if (searchResults.length > 0) {
+            // Save to DB
+            const mentionsToInsert = searchResults.map(res => ({
+                user_id: userId,
+                keyword: kwList[0] || 'general', // Simplified, could be improved to match specific keyword
+                title: res.title,
+                url: res.url,
+                snippet: res.snippet,
+                source: res.source,
+                detected_at: new Date().toISOString()
+            }))
+
+            const { data: inserted, error: insertError } = await supabase
+                .from('global_mentions')
+                .insert(mentionsToInsert)
+                .select()
+
+            if (insertError) {
+                console.error('[Global Search] Failed to save mentions:', insertError)
+            } else {
+                globalMentions = inserted || []
+                console.log(`[Global Search] Saved ${globalMentions.length} mentions online`)
+            }
+        }
     }
 
     return NextResponse.json({
@@ -86,3 +108,4 @@ export async function POST(request: NextRequest) {
         globalMentions: globalMentions
     })
 }
+
