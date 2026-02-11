@@ -5,21 +5,14 @@ import { searchGlobalKeywords } from '@/lib/search/global'
 
 export async function POST(request: NextRequest) {
     // 1. Auth check
-    const supabaseAdmin = createAdminClient()
-    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser()
+    const supabase = await (await import('@/lib/supabase/server')).createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
 
-    // Fallback for demo/testing or if called from frontend with session
-    const supabase = user ? supabaseAdmin : await (await import('@/lib/supabase/server')).createClient()
-
-    // Get user from session if not provided (for browser calls)
-    const { data: { user: sessionUser } } = await (user ? { data: { user } } : (supabase as any).auth.getUser())
-
-    const currentUser = user || sessionUser
-
-    if (!currentUser) {
+    if (authError || !user) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-    const userId = currentUser.id
+    const userId = user.id
+
 
     // 2. Get all active sites for this user
     const { data: sites, error: sitesError } = await supabase

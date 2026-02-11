@@ -2,7 +2,7 @@ import React from 'react';
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import { formatDate } from '@/lib/utils';
-import { Plus, Globe, Zap, Clock, History, MoreVertical, Check, AlertTriangle, RefreshCw, Database, Newspaper, Search, Activity, ExternalLink, ArrowRight } from 'lucide-react';
+import { Plus, Globe, History, RefreshCw, Database, Activity, ExternalLink, ArrowRight } from 'lucide-react';
 import { ScanButton } from '@/components/ScanButton';
 import { cn } from '@/lib/utils';
 
@@ -72,11 +72,6 @@ export default async function DashboardPage() {
         }))
     ].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
-    // 5. Get Sites list for the sidebar or small section
-    const { data: sites } = await supabase
-        .from('sites')
-        .select('*')
-        .limit(10);
 
     return (
         <div className="min-h-screen flex flex-col bg-[#050505]">
