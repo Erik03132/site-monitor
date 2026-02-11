@@ -1,0 +1,88 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { createAdminClient } from '@/lib/supabase/admin'
+import { performSiteScan } from '@/lib/monitor/scanner'
+import { searchGlobalKeywords } from '@/lib/search/global'
+
+export async function POST(request: NextRequest) {
+    // 1. Auth check
+    const supabaseAdmin = createAdminClient()
+    const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser()
+
+    // Fallback for demo/testing or if called from frontend with session
+    const supabase = user ? supabaseAdmin : (await import('@/lib/supabase/server')).createClient()
+
+    // Get user from session if not provided (for browser calls)
+    const { data: { user: sessionUser } } = await (user ? { data: { user } } : (supabase as any).auth.getUser())
+    const currentUser = user || sessionUser
+
+    if (!currentUser) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    const userId = currentUser.id
+
+    // 2. Get all active sites for this user
+    const { data: sites, error: sitesError } = await supabase
+        .from('sites')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('is_active', true)
+
+    if (sitesError) {
+        return NextResponse.json({ error: 'Failed to fetch sites' }, { status: 500 })
+    }
+
+    if (!sites || sites.length === 0) {
+        return NextResponse.json({
+            success: true,
+            message: 'No active sites to scan',
+            results: []
+        })
+    }
+
+    // 3. Get all active keywords
+    const { data: keywords } = await supabase
+        .from('keywords')
+        .select('keyword')
+        .eq('user_id', userId)
+        .eq('is_active', true)
+
+    // 4. Perform site scans
+    console.log(`Manual bulk scan for user ${userId} requested for ${sites.length} sites`)
+
+    const scanResults = []
+    for (const site of sites) {
+        try {
+            const result = await performSiteScan(supabase, site.id, site.url, site.name, userId)
+            scanResults.push({
+                site: site.url,
+                success: result.success,
+                changes: result.changesFound
+            })
+        } catch (err) {
+            scanResults.push({
+                site: site.url,
+                success: false,
+                error: String(err)
+            })
+        }
+    }
+
+    // 5. GLOBAL SEARCH (Option B)
+    let globalMentions: any[] = []
+    if (keywords && keywords.length > 0) {
+        const kwList = keywords.map(k => k.keyword)
+        console.log(`[Global Search] Starting for keywords: ${kwList.join(', ')}`)
+        const searchResults = await searchGlobalKeywords(kwList)
+
+        // Save to DB (optional/placeholder for now)
+        globalMentions = searchResults
+        console.log(`[Global Search] Found ${searchResults.length} mentions online`)
+    }
+
+    return NextResponse.json({
+        success: true,
+        message: `Scan finished: ${sites.length} sites checked, global search done.`,
+        siteResults: scanResults,
+        globalMentions: globalMentions
+    })
+}
