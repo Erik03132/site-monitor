@@ -2,8 +2,7 @@ import React from 'react';
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import { formatDate } from '@/lib/utils';
-import { Plus, Globe, History, RefreshCw, Database, Activity, ExternalLink, ArrowRight } from 'lucide-react';
-import { ScanButton } from '@/components/ScanButton';
+import { Plus, Globe, History, RefreshCw, Database, Activity, ExternalLink, ArrowRight, TrendingUp, Zap, Clock } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface EventItem {
@@ -23,7 +22,26 @@ export default async function DashboardPage() {
     // 1. Get auth user
     const { data: { user } } = await supabase.auth.getUser();
 
-    // 2. Fetch Local Changes
+    // 2. Fetch Stats
+    const { count: sitesCount } = await supabase.from('sites').select('*', { count: 'exact', head: true });
+
+    // Fetch counts for today
+    const yesterday = new Date();
+    yesterday.setHours(yesterday.getHours() - 24);
+
+    const { count: localChangesCount } = await supabase
+        .from('chunk_changes')
+        .select('*', { count: 'exact', head: true })
+        .gt('detected_at', yesterday.toISOString());
+
+    const { count: globalMentionsCount } = await supabase
+        .from('global_mentions')
+        .select('*', { count: 'exact', head: true })
+        .gt('detected_at', yesterday.toISOString());
+
+    const statsToday = (localChangesCount || 0) + (globalMentionsCount || 0);
+
+    // 3. Fetch Local Changes
     const { data: localChangesResponse } = await supabase
         .from('chunk_changes')
         .select(`
@@ -39,14 +57,14 @@ export default async function DashboardPage() {
         .order('detected_at', { ascending: false })
         .limit(20);
 
-    // 3. Fetch Global Mentions
+    // 4. Fetch Global Mentions
     const { data: globalMentionsResponse } = await supabase
         .from('global_mentions')
         .select('*')
         .order('detected_at', { ascending: false })
         .limit(20);
 
-    // 4. Merge and unify events
+    // 5. Merge and unify events
     const allEvents: EventItem[] = [
         ...(localChangesResponse || []).map(ch => {
             const page = (ch as any).pages;
@@ -74,9 +92,9 @@ export default async function DashboardPage() {
 
 
     return (
-        <div className="min-h-screen flex flex-col bg-[#050505]">
+        <div className="min-h-screen flex flex-col obsidian-gradient">
             {/* Header */}
-            <header className="sticky top-0 z-40 px-6 sm:px-10 py-5 flex items-center justify-between border-b border-white/[0.05] bg-black/40 backdrop-blur-xl">
+            <header className="sticky top-0 z-40 px-8 py-6 flex items-center justify-between border-b border-white/5 bg-black/40 backdrop-blur-xl">
                 <div>
                     <h1 className="text-2xl font-black text-white tracking-tight flex items-center gap-3">
                         <Activity className="text-primary w-6 h-6" />
@@ -86,19 +104,77 @@ export default async function DashboardPage() {
                 </div>
 
                 <div className="flex items-center gap-6">
-                    <Link href="/dashboard/sites/new" className="bg-primary hover:bg-primary/90 text-black px-6 py-2.5 rounded-2xl text-sm font-black transition-all flex items-center gap-2 active:scale-95">
+                    <Link href="/dashboard/sites/new" className="amber-button px-6 py-2.5 rounded-xl text-sm font-black transition-all flex items-center gap-2 active:scale-95">
                         <Plus className="size-4 stroke-[3px]" />
                         Добавить ресурс
                     </Link>
-                    <div className="size-10 rounded-full border border-white/10 p-0.5 bg-white/5 flex items-center justify-center font-bold text-white text-sm shrink-0">
+                    <div className="size-10 rounded-full border border-primary/30 p-0.5 bg-white/5 flex items-center justify-center font-bold text-white text-sm shrink-0">
                         {user?.email?.[0].toUpperCase() || 'U'}
                     </div>
                 </div>
             </header>
 
-            <main className="p-6 sm:p-10 max-w-5xl mx-auto w-full">
+            <main className="p-8 max-w-7xl mx-auto w-full space-y-10">
+                {/* Stats Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="glass-card p-6 rounded-2xl relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <Globe className="size-12 text-primary" />
+                        </div>
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                <Monitor className="size-5 text-primary" />
+                            </div>
+                            <span className="text-sm font-medium text-white/60">Всего сайтов</span>
+                        </div>
+                        <div className="text-4xl font-black text-white mb-1 tracking-tight">{sitesCount || 0}</div>
+                        <div className="text-[10px] text-primary flex items-center gap-1 font-black uppercase tracking-widest">
+                            <TrendingUp className="size-3" />
+                            Активный мониторинг
+                        </div>
+                    </div>
+
+                    <div className="glass-card p-6 rounded-2xl relative overflow-hidden group border-primary/10">
+                        <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <Zap className="size-12 text-primary" />
+                        </div>
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                <Activity className="size-5 text-primary" />
+                            </div>
+                            <span className="text-sm font-medium text-white/60">Событий за 24ч</span>
+                        </div>
+                        <div className="text-4xl font-black text-white mb-1 tracking-tight">{statsToday}</div>
+                        <div className="text-[10px] text-primary flex items-center gap-1 font-black uppercase tracking-widest">
+                            <TrendingUp className="size-3" />
+                            Поток данных активен
+                        </div>
+                    </div>
+
+                    <div className="glass-card p-6 rounded-2xl relative overflow-hidden group">
+                        <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity">
+                            <Clock className="size-12 text-primary" />
+                        </div>
+                        <div className="flex items-center gap-3 mb-4">
+                            <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center">
+                                <History className="size-5 text-primary" />
+                            </div>
+                            <span className="text-sm font-medium text-white/60">Интервал скана</span>
+                        </div>
+                        <div className="text-4xl font-black text-white mb-1 tracking-tight">30<span className="text-lg text-white/40 ml-1 font-normal">сек</span></div>
+                        <div className="text-[10px] text-primary flex items-center gap-1 font-black uppercase tracking-widest">
+                            Высокая точность
+                        </div>
+                    </div>
+                </div>
+
                 {/* Main Event Feed */}
                 <div className="space-y-8">
+                    <div className="flex items-center gap-3 mb-2">
+                        <History className="text-primary w-5 h-5" />
+                        <h2 className="text-xl font-black text-white tracking-tight">Последняя активность</h2>
+                    </div>
+
                     {allEvents.length > 0 ? (
                         <div className="relative space-y-6">
                             {/* Vertical line for the timeline */}
@@ -116,13 +192,13 @@ export default async function DashboardPage() {
                                         {event.type === 'site_change' ? <RefreshCw className="size-5" /> : <Globe className="size-5" />}
                                     </div>
 
-                                    <div className="bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.05] p-8 rounded-[32px] transition-all duration-300 shadow-2xl hover:shadow-primary/5">
+                                    <div className="glass-card p-8 rounded-[32px] transition-all duration-300 shadow-2xl hover:shadow-primary/5">
                                         <div className="flex justify-between items-start mb-4">
                                             <div>
                                                 <div className="flex items-center gap-3 mb-2">
                                                     <span className={cn(
-                                                        "text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg",
-                                                        event.type === 'site_change' ? 'bg-primary/10 text-primary border border-primary/10' : 'bg-blue-500/10 text-blue-500 border border-blue-500/10'
+                                                        "text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-lg border",
+                                                        event.type === 'site_change' ? 'bg-primary/10 text-primary border-primary/10' : 'bg-blue-500/10 text-blue-500 border-blue-500/10'
                                                     )}>
                                                         {event.type === 'site_change' ? 'Site Update' : 'Market Insight'}
                                                     </span>
@@ -171,9 +247,8 @@ export default async function DashboardPage() {
                 </div>
             </main>
 
-
             <footer className="mt-auto py-10 px-10 border-t border-white/[0.05] opacity-20">
-                <div className="max-w-6xl mx-auto flex justify-between items-center">
+                <div className="max-w-7xl mx-auto flex justify-between items-center">
                     <div className="text-[10px] font-black uppercase tracking-widest">Aether Event Feed 2.0</div>
                     <div className="text-[10px] font-medium italic">© 2024 Built with Advanced Agentic AI</div>
                 </div>
@@ -181,4 +256,22 @@ export default async function DashboardPage() {
         </div>
     );
 }
+
+const Monitor = ({ className }: { className?: string }) => (
+    <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="24" height="24"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className={className}
+    >
+        <rect width="20" height="14" x="2" y="3" rx="2" />
+        <line x1="8" x2="16" y1="21" y2="21" />
+        <line x1="12" x2="12" y1="17" y2="21" />
+    </svg>
+);
 
