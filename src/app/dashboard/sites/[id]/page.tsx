@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
@@ -47,44 +47,43 @@ export default function SiteDetailPage() {
     const [scanning, setScanning] = useState(false)
     const [scanResult, setScanResult] = useState<string | null>(null)
 
-    const fetchSiteData = useCallback(async () => {
-        const supabase = createClient()
-
-        // Fetch site
-        const { data: siteData } = await supabase
-            .from('sites')
-            .select('*')
-            .eq('id', siteId)
-            .single()
-
-        if (siteData) {
-            setSite(siteData)
-
-            // Fetch changes for this site
-            const { data: changesData } = await supabase
-                .from('chunk_changes')
-                .select(`
-          id,
-          change_type,
-          old_content,
-          new_content,
-          summary,
-          detected_at,
-          pages!inner(site_id)
-        `)
-                .eq('pages.site_id', siteId)
-                .order('detected_at', { ascending: false })
-                .limit(50)
-
-            setChanges(changesData as unknown as Change[] || [])
-        }
-
-        setLoading(false)
-    }, [siteId])
 
     useEffect(() => {
-        fetchSiteData()
-    }, [fetchSiteData])
+        const loadData = async () => {
+            const supabase = createClient()
+
+            const { data: siteData } = await supabase
+                .from('sites')
+                .select('*')
+                .eq('id', siteId)
+                .single()
+
+            if (siteData) {
+                setSite(siteData)
+
+                const { data: changesData } = await supabase
+                    .from('chunk_changes')
+                    .select(`
+              id,
+              change_type,
+              old_content,
+              new_content,
+              summary,
+              detected_at,
+              pages!inner(site_id)
+            `)
+                    .eq('pages.site_id', siteId)
+                    .order('detected_at', { ascending: false })
+                    .limit(50)
+
+                setChanges(changesData as unknown as Change[] || [])
+            }
+
+            setLoading(false)
+        }
+        loadData()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [siteId])
 
     async function handleScan() {
         setScanning(true)
@@ -101,7 +100,7 @@ export default function SiteDetailPage() {
                 setScanResult(result.message === 'No changes detected'
                     ? '✅ Изменений не обнаружено'
                     : `✅ Сканирование завершено: обнаружено ${result.chunks_count || 0} обновлений`)
-                fetchSiteData() // Refresh data
+                window.location.reload() // Refresh data
             } else {
                 setScanResult(`❌ Ошибка: ${result.error}`)
             }

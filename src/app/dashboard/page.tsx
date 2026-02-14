@@ -236,10 +236,10 @@ export default async function DashboardPage() {
                                                 ) : (
                                                     <div>
                                                         <div className="text-sm font-bold text-white mb-1">
-                                                            Найдено: <span className="text-primary">"{item.keyword}"</span>
+                                                            Найдено: <span className="text-primary">&quot;{item.keyword}&quot;</span>
                                                         </div>
                                                         <p className="text-xs text-white/60 line-clamp-2 mb-2 italic">
-                                                            "...{item.context}..."
+                                                            &quot;...{item.context}...&quot;
                                                         </p>
                                                         <a href={item.source_url} target="_blank" rel="noopener" className="text-[10px] text-blue-400 hover:underline truncate block">
                                                             {item.source_url}
