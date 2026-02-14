@@ -2,10 +2,8 @@ import React from 'react';
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import { formatDate } from '@/lib/utils';
-import { Plus, Globe, Zap, Clock, History, BarChart3, MoreVertical, Check, AlertTriangle, RefreshCw, Database, Search, Eye, ArrowUpRight } from 'lucide-react';
-import { ScanButton } from '@/components/ScanButton';
+import { Plus, Globe, Zap, Clock, History, RefreshCw, ArrowUpRight } from 'lucide-react';
 import { SitesList } from '@/components/dashboard/SitesList';
-import { cn } from '@/lib/utils';
 
 interface ChangeItem {
     id: string;
@@ -24,13 +22,20 @@ interface ChangeItem {
     };
 }
 
-interface SiteItem {
+// Feed item type for the live event stream
+interface FeedItem {
     id: string;
-    name: string | null;
-    url: string;
-    is_active: boolean;
-    last_scanned_at: string | null;
-    scan_interval_minutes: number;
+    type: 'site_change' | 'keyword_mention' | 'mention';
+    date: string;
+    keyword?: string;
+    context?: string;
+    source_url?: string;
+    change_type?: string;
+    new_content?: string | null;
+    summary?: string | null;
+    detected_at?: string;
+    created_at?: string;
+    pages?: { sites?: { id: string; name: string | null; url: string } };
 }
 
 export default async function DashboardPage() {
@@ -201,7 +206,7 @@ export default async function DashboardPage() {
 
                             <div className="space-y-4 flex-1 overflow-y-auto pr-2 custom-scrollbar">
                                 {feed.length > 0 ? (
-                                    feed.map((item: any) => (
+                                    feed.map((item: FeedItem) => (
                                         <div key={`${item.type}-${item.id}`} className="group relative pl-6 pb-2 border-l border-white/10 last:border-0 hover:border-primary/50 transition-colors">
                                             <div className={`absolute -left-[5px] top-0 size-2.5 rounded-full border-2 border-[#050507] ${item.type === 'site_change' ? 'bg-blue-500' : 'bg-primary'
                                                 } group-hover:scale-125 transition-transform`} />

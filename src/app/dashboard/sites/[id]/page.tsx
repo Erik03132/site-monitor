@@ -82,7 +82,6 @@ export default function SiteDetailPage() {
             setLoading(false)
         }
         loadData()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [siteId])
 
     async function handleScan() {

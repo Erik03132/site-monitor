@@ -24,26 +24,6 @@ export default function KeywordsPage() {
 
     const supabase = createClient()
 
-    const handleScanAll = async () => {
-        if (isScanning) return
-        setIsScanning(true)
-        const toastId = toast.loading('Запуск полного сканирования всех сайтов...')
-
-        try {
-            const response = await fetch('/api/sites/scan-all', { method: 'POST' })
-            const data = await response.json()
-
-            if (!response.ok) throw new Error(data.error || 'Ошибка сканирования')
-
-            toast.success(data.message || 'Сканирование завершено', { id: toastId })
-            router.refresh()
-        } catch (err) {
-            console.error('Scan error:', err)
-            toast.error('Не удалось запустить сканирование', { id: toastId })
-        } finally {
-            setIsScanning(false)
-        }
-    }
 
     const fetchKeywords = useCallback(async () => {
         try {
@@ -139,8 +119,8 @@ export default function KeywordsPage() {
                             const data = await response.json()
                             if (!response.ok) throw new Error(data.error)
                             toast.success(data.message, { id: toastId })
-                        } catch (err: any) {
-                            toast.error(err.message || 'Ошибка поиска', { id: toastId })
+                        } catch (err: unknown) {
+                            toast.error(err instanceof Error ? err.message : 'Ошибка поиска', { id: toastId })
                         } finally {
                             setIsScanning(false)
                         }

@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { performSiteScan } from '@/lib/monitor/scanner'
 
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
     const supabase = await createClient()
 
     // 1. Get user
