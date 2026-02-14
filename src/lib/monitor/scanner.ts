@@ -100,7 +100,6 @@ export async function performSiteScan(
             fetched_at: new Date().toISOString()
         }
 
-        let pageId: string
         let changes: Array<{
             chunk_id: string | null
             type: 'added' | 'removed' | 'modified'
@@ -115,7 +114,8 @@ export async function performSiteScan(
             .single()
 
         if (pageError) throw pageError
-        pageId = newPage.id
+        // eslint-disable-next-line prefer-const
+        let pageId = newPage.id
 
         if (existingPage) {
             // Compare with old chunks
@@ -178,7 +178,7 @@ async function checkAndSendNotifications(
     userId: string,
     siteUrl: string,
     siteName: string | null | undefined,
-    changes: any[],
+    changes: Array<{ old_content: string | null; new_content: string | null }>,
     foundKeywords: string[]
 ) {
     if (changes.length === 0 && foundKeywords.length === 0) return
@@ -258,7 +258,7 @@ async function parseHtmlContent(html: string) {
         // - Текст длиннее 10 символов
         // - Внутри нет кучи других тегов (чтобы не брать весь div целиком)
         if (text.length > 10 && $el.children().length < 5) {
-            const tagName = (el as any).tagName.toLowerCase()
+            const tagName = (el as unknown as { tagName: string }).tagName.toLowerCase()
             blocks.push({
                 type: tagName === 'a' || tagName === 'span' ? 'text_block' : tagName,
                 text

@@ -7,7 +7,6 @@ import {
     ArrowLeft,
     RefreshCcw,
     ExternalLink,
-    Maximize2,
     Smartphone,
     Monitor,
     ShieldCheck,

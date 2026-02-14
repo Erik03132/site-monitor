@@ -7,9 +7,7 @@ import {
     MoreVertical,
     Eye,
     ChevronDown,
-    ChevronUp,
-    Database,
-    Search
+    Database
 } from 'lucide-react'
 import { ScanButton } from '@/components/ScanButton'
 import { cn } from '@/lib/utils'

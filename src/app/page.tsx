@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import { Globe, ArrowRight, Zap, Clock, Shield } from 'lucide-react'
+import { ArrowRight, Zap, Clock, Shield } from 'lucide-react'
 
 export default async function HomePage() {
   const supabase = await createClient()
