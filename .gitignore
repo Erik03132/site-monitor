@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local cache & test files
+.npm-cache/
+test-proxy-logic.*
+verify_sites.py
+.git_corrupt_backup/
+.opencode/
