@@ -4,7 +4,6 @@ import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Plus, Trash2, Bell, Loader2, Search, Zap, RefreshCw } from 'lucide-react'
 import { toast } from 'sonner'
-import { useRouter } from 'next/navigation'
 
 interface Keyword {
     id: string
@@ -20,7 +19,6 @@ export default function KeywordsPage() {
     const [adding, setAdding] = useState(false)
     const [error, setError] = useState('')
     const [isScanning, setIsScanning] = useState(false)
-    const router = useRouter()
 
     const supabase = createClient()
 

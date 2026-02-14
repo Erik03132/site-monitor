@@ -2,7 +2,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { NextResponse } from 'next/server'
 
-export async function POST(request: Request) {
+export async function POST(_request: Request) {
     try {
         const supabase = await createClient()
         const { data: { user }, error: userError } = await supabase.auth.getUser()
@@ -24,7 +24,7 @@ export async function POST(request: Request) {
         const PERPLEXITY_API_KEY = process.env.PERPLEXITY_API_KEY?.replace('your_', ''); // Cleanup if needed
 
         const results = []
-        
+
         for (const kw of keywords) {
             // Реальный вызов Perplexity Sonar API
             const response = await fetch('https://api.perplexity.ai/chat/completions', {
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
                         summary: m.summary
                     });
                 }
-                
+
                 results.push({ keyword: kw.keyword, found: mentions.length });
             }
 
@@ -74,9 +74,9 @@ export async function POST(request: Request) {
                 .eq('id', kw.id)
         }
 
-        return NextResponse.json({ 
+        return NextResponse.json({
             message: `Глобальный скан завершен. Обработано слов: ${keywords.length}`,
-            results 
+            results
         })
     } catch (error) {
         console.error('Scan error:', error)

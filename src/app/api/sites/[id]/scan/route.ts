@@ -13,7 +13,7 @@ export async function POST(
 
   try {
     const supabase = await createClient()
-    
+
     // 1. Получаем инфо о сайте
     const { data: site, error: siteError } = await supabase
       .from('sites')
@@ -42,7 +42,7 @@ export async function POST(
     const cleanContent = $('body').text().replace(/\s\s+/g, ' ').trim()
 
     // 4. Chunking (Простая реализация для MVP)
-    const chunks = cleanContent.match(/.{1,1000}/g) || [] // Чанки по 1000 символов
+    const _chunks = cleanContent.match(/.{1,1000}/g) || [] // Чанки по 1000 символов
 
     // 5. Сохранение страницы и поиск изменений
     const { data: pageRecord, error: pageError } = await supabase
@@ -71,33 +71,34 @@ export async function POST(
     // 7. LLM Summary (Mooonshot/Perplexity)
     const MOONSHOT_API_KEY = process.env.MOONSHOT_API_KEY
     if (MOONSHOT_API_KEY) {
-        // Вызов ИИ для саммари (фоново в реальности)
-        const summaryResponse = await fetch('https://api.moonshot.cn/v1/chat/completions', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Bearer ${MOONSHOT_API_KEY}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                model: 'moonshot-v1-8k',
-                messages: [
-                    { role: 'system', content: 'Ты аналитик мониторинга сайтов. Кратко опиши суть текста на русском.' },
-                    { role: 'user', content: `Текст страницы: ${cleanContent.substring(0, 2000)}` }
-                ]
-            })
+      // Вызов ИИ для саммари (фоново в реальности)
+      const summaryResponse = await fetch('https://api.moonshot.cn/v1/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${MOONSHOT_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model: 'moonshot-v1-8k',
+          messages: [
+            { role: 'system', content: 'Ты аналитик мониторинга сайтов. Кратко опиши суть текста на русском.' },
+            { role: 'user', content: `Текст страницы: ${cleanContent.substring(0, 2000)}` }
+          ]
         })
-        const summaryData = await summaryResponse.json()
-        const aiSummary = summaryData.choices[0].message.content
+      })
+      const summaryData = await summaryResponse.json()
+      const aiSummary = summaryData.choices[0].message.content
 
-        await supabase
-            .from('chunk_changes')
-            .update({ summary: aiSummary })
-            .eq('page_id', pageRecord.id)
+      await supabase
+        .from('chunk_changes')
+        .update({ summary: aiSummary })
+        .eq('page_id', pageRecord.id)
 
-        // 8. Отправка уведомления
-        if (user.email) {
-            await sendChangeEmail(user.email, site.name || site.url, aiSummary)
-        }
+      // 8. Отправка уведомления
+      const { data: { user: authUser } } = await supabase.auth.getUser()
+      if (authUser?.email) {
+        await sendChangeEmail(authUser.email, site.name || site.url, aiSummary)
+      }
     }
 
     // Обновляем сайт
@@ -108,8 +109,8 @@ export async function POST(
 
     return NextResponse.json({ message: 'Scan complete', site: site.url, hasChanges: true })
 
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error('Scan error:', error)
-    return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 })
   }
 }

@@ -25,11 +25,11 @@ export async function GET(request: Request) {
         // 2. Запускаем глобальный скан ключевых слов (Раз в сутки в 9:00 по логике крона Vercel)
         await fetch(`${APP_URL}/api/keywords/scan`, { method: 'POST' }).catch(e => console.error(e))
 
-        return NextResponse.json({ 
-            success: true, 
-            message: `Ежедневный скан (09:00) выполнен для ${sites?.length || 0} ресурсов.` 
+        return NextResponse.json({
+            success: true,
+            message: `Ежедневный скан (09:00) выполнен для ${sites?.length || 0} ресурсов.`
         })
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 })
+    } catch (error: unknown) {
+        return NextResponse.json({ error: error instanceof Error ? error.message : String(error) }, { status: 500 })
     }
 }
