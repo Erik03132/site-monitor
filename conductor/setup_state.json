@@ -1,0 +1,44 @@
+{
+    "status": "complete",
+    "project_type": "brownfield",
+    "current_section": "styleguides",
+    "current_question": 2,
+    "completed_sections": [
+        "product",
+        "tech_stack",
+        "workflow",
+        "styleguides"
+    ],
+    "answers": {
+        "product_name": "site-monitor",
+        "description": "Система мониторинга веб-сайтов в реальном времени с отслеживанием изменений контента и ключевых слов.",
+        "problem_statement": "Юзерам сложно вручную отслеживать изменения на множестве сайтов (пропуск контента, акций, ошибок).",
+        "target_audience": "Владельцы бизнеса, следящие за конкурентами.",
+        "key_goals": "Стабильная работа сканера без блокировок.",
+        "languages": [
+            "TypeScript",
+            "JavaScript"
+        ],
+        "frontend_framework": "Next.js 15+ (App Router), React 19",
+        "styling": "Tailwind CSS",
+        "database": "PostgreSQL (Supabase)",
+        "infrastructure": "Vercel",
+        "tdd_strictness": "Moderate",
+        "commit_strategy": "Descriptive messages",
+        "code_review_policy": "Required for non-trivial changes",
+        "verification_checkpoints": "Only at track completion",
+        "styleguides_to_include": [
+            "TypeScript/JavaScript"
+        ],
+        "use_existing_configs": true
+    },
+    "files_created": [
+        "conductor/product.md",
+        "conductor/tech-stack.md",
+        "conductor/workflow.md",
+        "conductor/index.md",
+        "conductor/tracks.md"
+    ],
+    "started_at": "2026-02-10T02:09:08+03:00",
+    "last_updated": "2026-02-10T02:23:49+03:00"
+}

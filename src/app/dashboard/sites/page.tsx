@@ -1,6 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import Link from 'next/link'
-import { Plus, Globe, MoreVertical, ExternalLink, Trash2, Pencil } from 'lucide-react'
+import { Plus, Globe, MoreVertical, ExternalLink, Trash2, Pencil, Eye } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
 import type { Site } from '@/types/database'
 
@@ -66,6 +66,13 @@ export default async function SitesPage() {
                                         >
                                             <Pencil className="w-4 h-4 text-blue-400" />
                                             Изменить
+                                        </Link>
+                                        <Link
+                                            href={`/dashboard/sites/${site.id}/preview`}
+                                            className="flex items-center gap-3 px-4 py-3 text-sm hover:bg-white/5 font-semibold"
+                                        >
+                                            <Eye className="w-4 h-4 text-blue-400" />
+                                            Живой просмотр
                                         </Link>
                                         <a
                                             href={site.url}

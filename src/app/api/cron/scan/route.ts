@@ -1,42 +1,35 @@
-import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase/admin'
-import { performSiteScan } from '@/lib/monitor/scanner'
 
-export async function GET(request: NextRequest) {
-    const authHeader = request.headers.get('authorization')
+import { createClient } from '@/lib/supabase/server'
+import { NextResponse } from 'next/server'
+
+export async function GET(request: Request) {
+    // Проверка секретного ключа крона (безопасность Vercel)
+    const authHeader = request.headers.get('authorization');
     if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-        return new NextResponse('Unauthorized', { status: 401 })
+        return new Response('Unauthorized', { status: 401 });
     }
 
-    const supabase = createAdminClient()
+    try {
+        const supabase = await createClient()
+        const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
 
-    // 1. Get all active sites that need scanning
-    const { data: sites, error } = await supabase
-        .from('sites')
-        .select('*')
-        .eq('is_active', true)
-
-    if (error || !sites) {
-        return NextResponse.json({ error: 'Failed to fetch sites' }, { status: 500 })
-    }
-
-    const results = []
-    const now = new Date()
-
-    for (const site of sites) {
-        // Simple interval check: if last_scanned_at + interval < now
-        const lastScanned = site.last_scanned_at ? new Date(site.last_scanned_at) : new Date(0)
-        const intervalMs = (site.scan_interval_minutes || 60) * 60 * 1000
-
-        if (now.getTime() - lastScanned.getTime() >= intervalMs) {
-            console.log(`Scanning site: ${site.url}`)
-            const result = await performSiteScan(supabase, site.id, site.url, site.name, site.user_id)
-            results.push({ site_id: site.id, success: result.success, changes: result.changesFound })
+        // 1. Сканируем все активные сайты
+        const { data: sites } = await supabase.from('sites').select('id').eq('is_active', true)
+        if (sites) {
+            for (const site of sites) {
+                // Вызываем API сканирования для каждого сайта
+                await fetch(`${APP_URL}/api/sites/${site.id}/scan`, { method: 'POST' }).catch(e => console.error(e))
+            }
         }
-    }
 
-    return NextResponse.json({
-        processed: results.length,
-        results
-    })
+        // 2. Запускаем глобальный скан ключевых слов (Раз в сутки в 9:00 по логике крона Vercel)
+        await fetch(`${APP_URL}/api/keywords/scan`, { method: 'POST' }).catch(e => console.error(e))
+
+        return NextResponse.json({ 
+            success: true, 
+            message: `Ежедневный скан (09:00) выполнен для ${sites?.length || 0} ресурсов.` 
+        })
+    } catch (error: any) {
+        return NextResponse.json({ error: error.message }, { status: 500 })
+    }
 }

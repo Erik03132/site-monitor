@@ -171,11 +171,19 @@ export default function SiteDetailPage() {
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-4 relative z-10">
+                    <div className="flex items-center gap-4 relative z-10 flex-wrap">
+                        <Link
+                            href={`/dashboard/sites/${siteId}/preview`}
+                            className="flex items-center gap-3 px-6 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl font-black text-white transition-all active:scale-[0.98]"
+                        >
+                            <ExternalLink className="w-5 h-5 text-primary" />
+                            Просмотр в оболочке
+                        </Link>
+
                         <button
                             onClick={handleScan}
                             disabled={scanning}
-                            className="flex items-center gap-3 px-8 py-4 bg-blue-600 hover:bg-blue-500 disabled:opacity-50 rounded-2xl font-black text-white shadow-[0_10px_30px_rgba(37,99,235,0.3)] transition-all active:scale-[0.98]"
+                            className="flex items-center gap-3 px-8 py-4 bg-primary hover:bg-primary/80 disabled:opacity-50 rounded-2xl font-black text-obsidian shadow-[0_10px_30px_rgba(255,138,0,0.3)] transition-all active:scale-[0.98]"
                         >
                             {scanning ? (
                                 <Loader2 className="w-5 h-5 animate-spin" />

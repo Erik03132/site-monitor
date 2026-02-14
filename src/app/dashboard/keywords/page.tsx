@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { createClient } from '@/lib/supabase/client'
-import { Plus, Trash2, Bell, Loader2, Search, Zap, RefreshCw, Globe } from 'lucide-react'
+import { Plus, Trash2, Bell, Loader2, Search, Zap, RefreshCw } from 'lucide-react'
 import { toast } from 'sonner'
 import { useRouter } from 'next/navigation'
 
@@ -20,7 +20,6 @@ export default function KeywordsPage() {
     const [adding, setAdding] = useState(false)
     const [error, setError] = useState('')
     const [isScanning, setIsScanning] = useState(false)
-    const [globalMentions, setGlobalMentions] = useState<any[]>([])
     const router = useRouter()
 
     const supabase = createClient()
@@ -28,8 +27,7 @@ export default function KeywordsPage() {
     const handleScanAll = async () => {
         if (isScanning) return
         setIsScanning(true)
-        setGlobalMentions([])
-        const toastId = toast.loading('Запуск полного сканирования...')
+        const toastId = toast.loading('Запуск полного сканирования всех сайтов...')
 
         try {
             const response = await fetch('/api/sites/scan-all', { method: 'POST' })
@@ -37,13 +35,7 @@ export default function KeywordsPage() {
 
             if (!response.ok) throw new Error(data.error || 'Ошибка сканирования')
 
-            if (data.globalMentions && data.globalMentions.length > 0) {
-                setGlobalMentions(data.globalMentions)
-                toast.success(`Найдено ${data.globalMentions.length} упоминаний в мире!`, { id: toastId })
-            } else {
-                toast.success('Локальное сканирование завершено, мировых новостей не найдено', { id: toastId })
-            }
-
+            toast.success(data.message || 'Сканирование завершено', { id: toastId })
             router.refresh()
         } catch (err) {
             console.error('Scan error:', err)
@@ -134,17 +126,30 @@ export default function KeywordsPage() {
         <div className="p-8 max-w-4xl mx-auto text-white">
             <div className="mb-10 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
                 <div>
-                    <h1 className="text-3xl font-black tracking-tight uppercase">Глобальный мониторинг</h1>
-                    <p className="text-gray-400 mt-1 font-bold">Отслеживайте упоминания ваших ключевых слов по всему интернету через Perplexity AI</p>
+                    <h1 className="text-3xl font-black tracking-tight">Ключевые слова</h1>
+                    <p className="text-gray-400 mt-1 font-medium">Глобальный мониторинг упоминаний в новостях и интернете</p>
                 </div>
-
                 <button
-                    onClick={handleScanAll}
+                    onClick={async () => {
+                        if (isScanning) return
+                        setIsScanning(true)
+                        const toastId = toast.loading('Запуск глобального поиска по всему интернету...')
+                        try {
+                            const response = await fetch('/api/keywords/scan', { method: 'POST' })
+                            const data = await response.json()
+                            if (!response.ok) throw new Error(data.error)
+                            toast.success(data.message, { id: toastId })
+                        } catch (err: any) {
+                            toast.error(err.message || 'Ошибка поиска', { id: toastId })
+                        } finally {
+                            setIsScanning(false)
+                        }
+                    }}
                     disabled={isScanning}
-                    className="flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-2xl text-sm font-bold transition-all disabled:opacity-50"
+                    className="flex items-center gap-2 px-6 py-3 bg-primary/10 hover:bg-primary/20 border border-primary/20 rounded-2xl text-sm font-bold text-primary transition-all disabled:opacity-50"
                 >
-                    <RefreshCw className={`w-4 h-4 ${isScanning ? 'animate-spin text-blue-500' : ''}`} />
-                    Проверить все сайты сейчас
+                    <RefreshCw className={`w-4 h-4 ${isScanning ? 'animate-spin' : ''}`} />
+                    Глобальный скан сейчас
                 </button>
             </div>
 
@@ -218,58 +223,17 @@ export default function KeywordsPage() {
                 )}
             </div>
 
-            {/* Global Mentions Section (Option B) */}
-            {globalMentions.length > 0 && (
-                <div className="mt-16 animate-in fade-in slide-in-from-bottom-5 duration-700">
-                    <div className="flex items-center gap-3 mb-6">
-                        <div className="size-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary border border-primary/20">
-                            <Globe className="w-5 h-5" />
-                        </div>
-                        <h2 className="text-2xl font-black tracking-tight">Мировые упоминания</h2>
-                    </div>
-
-                    <div className="grid gap-4">
-                        {globalMentions.map((mention, idx) => (
-                            <a
-                                key={idx}
-                                href={mention.url}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="group bg-white/[0.03] hover:bg-white/[0.06] border border-white/10 p-6 rounded-[24px] transition-all flex flex-col gap-3"
-                            >
-                                <div className="flex justify-between items-start gap-4">
-                                    <h3 className="font-bold text-lg leading-tight group-hover:text-primary transition-colors">
-                                        {mention.title}
-                                    </h3>
-                                    <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-white/5 rounded-md text-gray-400">
-                                        {mention.source}
-                                    </span>
-                                </div>
-                                <p className="text-sm text-gray-400 font-medium line-clamp-2">
-                                    {mention.snippet}
-                                </p>
-                                <div className="flex items-center gap-2 text-[11px] font-bold text-primary/50 group-hover:text-primary transition-colors">
-                                    Читать полностью <Plus className="w-3 h-3" />
-                                </div>
-                            </a>
-                        ))}
-                    </div>
-                </div>
-            )}
-
-            <div className="mt-12 p-8 bg-blue-600/5 rounded-[32px] border border-blue-600/10 relative overflow-hidden">
-                <div className="absolute -right-10 -bottom-10 size-40 bg-blue-600/10 blur-3xl rounded-full"></div>
-                <h4 className="text-sm font-black uppercase tracking-widest text-blue-400 mb-4 flex items-center gap-2">
-                    <Zap className="w-4 h-4 fill-blue-400" />
-                    Как это работает?
+            <div className="mt-12 p-6 bg-primary/5 rounded-3xl border border-primary/10">
+                <h4 className="text-sm font-black uppercase tracking-widest text-primary mb-2 flex items-center gap-2">
+                    <Zap className="w-4 h-4 fill-primary" />
+                    Глобальный OSINT Мониторинг
                 </h4>
-                <p className="text-gray-400 text-sm leading-relaxed font-medium relative z-10">
-                    Мы используем мощь <strong className="text-white">Perplexity AI</strong>, чтобы сканировать глобальную сеть на наличие ваших ключевых слов.
-                    Система находит самые свежие новости за последние 24-48 часов, анализирует их и создает краткие выводы из 3-4 предложений.
-                    Все результаты мгновенно появляются в вашей общей ленте на рабочем столе.
+                <p className="text-gray-400 text-sm leading-relaxed font-medium">
+                    Система автоматически сканирует новости, медиа и открытые данные по всему миру каждый день в <span className="text-primary font-bold">9:00 утра</span>.
+                    Мы используем ИИ, чтобы составить краткую выжимку каждого упоминания и предоставить прямую ссылку на первоисточник.
+                    Глобальный скан можно также запустить вручную в любое время.
                 </p>
             </div>
-
         </div>
     )
 }

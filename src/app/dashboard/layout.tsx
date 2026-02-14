@@ -16,7 +16,7 @@ export default async function DashboardLayout({
     }
 
     return (
-        <div className="min-h-screen obsidian-gradient flex flex-col lg:flex-row">
+        <div className="min-h-screen obsidian-gradient flex flex-col lg:flex-row" suppressHydrationWarning>
             <Sidebar />
             <div className="flex-1 lg:ml-64 transition-all duration-300">
                 {children}

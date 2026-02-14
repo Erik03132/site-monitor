@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aether: Global Architecture Update</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF8A00',
+                        obsidian: '#050507',
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #050507;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .amber-glow {
+            text-shadow: 0 0 10px rgba(255, 138, 0, 0.3);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<body class="p-8">
+    <header class="mb-12 flex justify-between items-end border-b border-white/5 pb-8">
+        <div>
+            <div class="flex items-center gap-2 mb-2 text-primary">
+                <span class="material-symbols-outlined">architecture</span>
+                <span class="text-[10px] font-black uppercase tracking-widest">New Architecture Verified</span>
+            </div>
+            <h1 class="text-4xl font-black tracking-tighter">Review: Подход разделен</h1>
+            <p class="text-white/40 mt-1">Сайты и Ключевые слова теперь независимы</p>
+        </div>
+        <div class="text-right">
+            <div class="text-xs font-bold text-white/20 uppercase tracking-tighter">Next Global Scan</div>
+            <div class="text-xl font-bold text-primary amber-glow">Завтра, 09:00</div>
+        </div>
+    </header>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        <!-- Dashboard Column 1: Local Sites -->
+        <div class="space-y-6">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-white/20">language</span>
+                <h3 class="font-bold text-xs uppercase tracking-widest text-white/60">Обновления сайтов (Локально)</h3>
+            </div>
+            <div class="glass-card rounded-2xl p-6 space-y-4">
+                <div class="flex gap-4 items-start opacity-70">
+                    <div
+                        class="size-8 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center text-green-500 shrink-0">
+                        <span class="material-symbols-outlined text-sm">check</span>
+                    </div>
+                    <div>
+                        <div class="text-sm font-bold italic">НКО (portal-nko.ru)</div>
+                        <div class="text-xs text-white/30 truncate">Изменен текст в новостном блоке...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Column 2: Global Keywords -->
+        <div class="space-y-6">
+            <div class="flex items-center gap-3 text-primary">
+                <span class="material-symbols-outlined">public</span>
+                <h3 class="font-bold text-xs uppercase tracking-widest">Глобальный мониторинг (OSINT)</h3>
+            </div>
+            <div class="glass-card rounded-2xl p-6 border-primary/20 bg-primary/[0.01] space-y-4">
+                <div class="flex gap-4 items-start">
+                    <div
+                        class="size-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
+                        <span class="material-symbols-outlined text-lg">news</span>
+                    </div>
+                    <div>
+                        <div class="text-sm font-bold text-primary italic">Mention Found: "Site Monitor"</div>
+                        <div class="text-xs text-white/60 leading-relaxed mt-1">
+                            <b class="text-white/80">Sumary:</b> Проект упомянут в обзоре AI-инструментов 2026 как
+                            перспективный OSINT-сканер.
+                        </div>
+                        <div
+                            class="mt-2 text-[9px] font-black text-white/20 flex items-center gap-1 uppercase hover:text-primary transition-colors cursor-pointer">
+                            <span class="material-symbols-outlined text-[12px]">link</span> Перейти к источнику
+                            (TechCrunch)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Logic -->
+    <div class="mt-12 p-8 rounded-[32px] glass-card border-white/10 flex items-center gap-8">
+        <div
+            class="size-16 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center text-primary text-3xl shrink-0">
+            <span class="material-symbols-outlined">schedule</span>
+        </div>
+        <div>
+            <div class="text-lg font-black tracking-tight mb-2 uppercase">Cron Configuration</div>
+            <p class="text-sm text-white/40 leading-relaxed italic">
+                Все лишние кроны удалены. Глобальный скан запускается <span class="text-primary font-bold">1 раз в сутки
+                    в 9:00</span>.
+                Это минимизирует расходы на API и дает одну качественную выжимку за день.
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+0000000000000000000000000000000000000000 4e7389e13049e737b46dc1200ca1ba9b9eb4167a Igor Vasin <igorvasin@MacBook-Air-Igor.local> 1770650148 +0300	commit (initial): Initial commit from Create Next App
+4e7389e13049e737b46dc1200ca1ba9b9eb4167a 0fdc9bb834fd1bf89bad1f797435113d376e7455 erik03132 <erik03132@gmail.com> 1770670812 +0300	commit: Initial commit: Restore keywords section and migrate project structure
+0fdc9bb834fd1bf89bad1f797435113d376e7455 0fdc9bb834fd1bf89bad1f797435113d376e7455 erik03132 <erik03132@gmail.com> 1770670818 +0300	Branch: renamed refs/heads/main to refs/heads/main
+0fdc9bb834fd1bf89bad1f797435113d376e7455 41b91f1be09721a3ecdffd4f9b3fac6a3cb8d146 erik03132 <erik03132@gmail.com> 1770671753 +0300	commit: Fix build errors: remove explicit any and unused imports
+41b91f1be09721a3ecdffd4f9b3fac6a3cb8d146 4b6bd64d6a4e3c3f2f7f5d40432267a26902fb4f erik03132 <erik03132@gmail.com> 1770672186 +0300	commit: Fix all build warnings and errors
+4b6bd64d6a4e3c3f2f7f5d40432267a26902fb4f ab0ebd75f803262443d575d52fff15f059a3df0f erik03132 <erik03132@gmail.com> 1770673617 +0300	commit: Bump Next.js to latest (15.2+ likely) to fix CVE-2025-66478
+ab0ebd75f803262443d575d52fff15f059a3df0f 3413a5b454269f6a6822cded1e9b1335ab44ab43 erik03132 <erik03132@gmail.com> 1770674791 +0300	commit: Implement functional Keywords page and ScanButton interactivity
+3413a5b454269f6a6822cded1e9b1335ab44ab43 86e01b82fa2ad34ae663e2985e5ac458d9410e92 erik03132 <erik03132@gmail.com> 1770675017 +0300	commit: hotfix: stable 15.1.8
+86e01b82fa2ad34ae663e2985e5ac458d9410e92 8d90123ac4ecdac4b1135298774583368ee3495d erik03132 <erik03132@gmail.com> 1770675884 +0300	commit: chore: fix security vulnerability and sync dependencies
+8d90123ac4ecdac4b1135298774583368ee3495d 5a076ed280d5570cd67a4672f4f26b7bc59acac2 erik03132 <erik03132@gmail.com> 1770677427 +0300	commit: UI: Move mobile menu toggle to top right and adjust header paddings
+5a076ed280d5570cd67a4672f4f26b7bc59acac2 a2e5dacd40ceb9e79a0339d38d7c0a027c74d265 erik03132 <erik03132@gmail.com> 1770678486 +0300	commit: UI: Refine Settings page icons style with primary circles
+a2e5dacd40ceb9e79a0339d38d7c0a027c74d265 6949916913f59db6b8db86e8f5cc82c93bbfc038 erik03132 <erik03132@gmail.com> 1770759697 +0300	commit: Fix scanner logic, add manual scan buttons and debug API
+6949916913f59db6b8db86e8f5cc82c93bbfc038 c432182757571b388eb3070b4f2eec9d8a0c9d46 erik03132 <erik03132@gmail.com> 1771086661 +0300	commit: feat: complete UI localization, SitesList migration and proxy hardening
